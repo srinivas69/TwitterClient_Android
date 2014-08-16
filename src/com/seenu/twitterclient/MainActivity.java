@@ -1,8 +1,7 @@
 package com.seenu.twitterclient;
 
-import android.os.Bundle;
-import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -32,7 +31,6 @@ public class MainActivity extends ActionBarActivity {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.content_frame, login);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.addToBackStack(null);
 		ft.commit();
 	}
 

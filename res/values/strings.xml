@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="consumer_key">V5hrO0t3ob8QyuvgD2z3QEVhv</string>
     <string name="consumer_secret">YlSa6PnPY8d4XVoYq6sshMo4ZRPwO5GrFn3QRELpRKT7bhRE2W</string>
+    <string name="TWITTER_CALLBACK_URL">oauth://twitter_callback</string>
 
 </resources>

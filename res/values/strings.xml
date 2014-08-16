@@ -4,5 +4,7 @@
     <string name="app_name">Twitter Client</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="consumer_key">V5hrO0t3ob8QyuvgD2z3QEVhv</string>
+    <string name="consumer_secret">YlSa6PnPY8d4XVoYq6sshMo4ZRPwO5GrFn3QRELpRKT7bhRE2W</string>
 
 </resources>

@@ -12,6 +12,9 @@ public class MainActivity extends ActionBarActivity {
 	private String CONSUMER_KEY;
 	private String CONSUMER_SECRET;
 
+	// Name of the sharedprefernce
+	public static String PREF_NAME = "TwitPrefs";
+
 	SharedPreferences pref;
 
 	@Override
@@ -22,7 +25,7 @@ public class MainActivity extends ActionBarActivity {
 		CONSUMER_KEY = getResources().getString(R.string.consumer_key);
 		CONSUMER_SECRET = getResources().getString(R.string.consumer_secret);
 
-		pref = getPreferences(0);
+		pref = getSharedPreferences(PREF_NAME, 0);
 		SharedPreferences.Editor edit = pref.edit();
 		edit.putString("CONSUMER_KEY", CONSUMER_KEY);
 		edit.putString("CONSUMER_SECRET", CONSUMER_SECRET);

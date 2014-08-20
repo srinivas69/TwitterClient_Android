@@ -6,8 +6,6 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -45,18 +43,34 @@ public class LoginFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.login_fragment, container, false);
 		login = (ImageView) view.findViewById(R.id.imageView1);
-		pref = getActivity().getPreferences(0);
+
+		// call shared preferences
+		pref = getActivity().getSharedPreferences(MainActivity.PREF_NAME, 0);
 		twitter = new TwitterFactory().getInstance();
+
+		// set consumer_key and consumer_secret for oAuth
 		twitter.setOAuthConsumer(pref.getString("CONSUMER_KEY", ""),
 				pref.getString("CONSUMER_SECRET", ""));
+
 		login.setOnClickListener(new LoginProcess());
 		return view;
+	}
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if(auth_dialog!=null){
+			auth_dialog.dismiss();
+		}
 	}
 
 	private class LoginProcess implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
+
+			// call Aynctask to get the request token
 			new TokenGet().execute();
 		}
 	}
@@ -65,7 +79,10 @@ public class LoginFragment extends Fragment {
 		@Override
 		protected String doInBackground(String... args) {
 			try {
-				requestToken = twitter.getOAuthRequestToken(getString(R.string.TWITTER_CALLBACK_URL));
+				requestToken = twitter
+						.getOAuthRequestToken(getString(R.string.TWITTER_CALLBACK_URL));
+
+				// get authorization url
 				oauth_url = requestToken.getAuthorizationURL();
 			} catch (TwitterException e) {
 				// TODO Auto-generated catch block
@@ -77,7 +94,7 @@ public class LoginFragment extends Fragment {
 		@Override
 		protected void onPostExecute(String oauth_url) {
 			if (oauth_url != null) {
-				 Log.e("URL", oauth_url);
+				Log.e("URL", oauth_url);
 				auth_dialog = new Dialog(getActivity());
 				auth_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				auth_dialog.setContentView(R.layout.auth_dialog);
@@ -96,15 +113,16 @@ public class LoginFragment extends Fragment {
 					@Override
 					public void onPageFinished(WebView view, String url) {
 						super.onPageFinished(view, url);
-						System.out.println(url);
 						if (url.contains("oauth_verifier")
 								&& authComplete == false) {
 							authComplete = true;
-							Log.e("Url", url);
+							// Log.e("Url", url);
 							Uri uri = Uri.parse(url);
 							oauth_verifier = uri
 									.getQueryParameter("oauth_verifier");
 							auth_dialog.dismiss();
+
+							// call Asynctask to get AccessToken
 							new AccessTokenGet().execute();
 						} else if (url.contains("denied")) {
 							auth_dialog.dismiss();
@@ -141,6 +159,11 @@ public class LoginFragment extends Fragment {
 				accessToken = twitter.getOAuthAccessToken(requestToken,
 						oauth_verifier);
 				SharedPreferences.Editor edit = pref.edit();
+
+				/*
+				 * save the access_token & access_token_secret within the
+				 * sharedpreferences
+				 */
 				edit.putString("ACCESS_TOKEN", accessToken.getToken());
 				edit.putString("ACCESS_TOKEN_SECRET",
 						accessToken.getTokenSecret());
@@ -160,7 +183,7 @@ public class LoginFragment extends Fragment {
 		protected void onPostExecute(Boolean response) {
 			if (response) {
 				progress.hide();
-				System.out.println("LoggedIn");
+				// System.out.println("LoggedIn");
 				Intent i = new Intent(getActivity(), HomeScreenActivity.class);
 				startActivity(i);
 			}

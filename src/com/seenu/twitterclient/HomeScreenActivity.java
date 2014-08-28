@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -77,38 +78,48 @@ public class HomeScreenActivity extends ActionBarActivity {
 	}
 
 	private class UserHomeTimeline extends
-			AsyncTask<Void, Void, List<HomeTimelineObject>> {
+			AsyncTask<Void, Void, List<twitter4j.Status>> {
 
 		// String result = null;
 
 		@Override
-		protected List<HomeTimelineObject> doInBackground(Void... params) {
+		protected List<twitter4j.Status> doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 
 			List<twitter4j.Status> statuses = null;
-			ArrayList<HomeTimelineObject> asd = null;
 			try {
 				Gson gson = new Gson();
-				statuses = twitter.getHomeTimeline(new Paging(1));
+				statuses = twitter.getHomeTimeline(new Paging(40));
 
-				String statusStr = gson.toJson(statuses);
+				System.out.println(statuses.size());
+				// Log.e("Statuses_Size", statuses.size());
+				Log.i("HOME_TIMELINE",
+						statuses.get(0).getURLEntities()[0].getURL());
+				String statusStr = gson.toJson(statuses); 
 				// System.out.println(statusStr);
 
-				Type listType = new TypeToken<ArrayList<HomeTimelineObject>>() {
-				}.getType();
+				/*
+				 * Type listType = new
+				 * TypeToken<ArrayList<HomeTimelineObject>>() { }.getType();
+				 */
 				// In this test code i just shove the JSON here as string.
-				asd = gson.fromJson(statusStr, listType);
-				System.out.println(asd.size());
+				// asd = gson.fromJson(statusStr, listType);
+				// if(asd.get(0).getUrlEntities().size()!=0)
+				/*
+				 * System.out.println(asd.get(1).getUrlEntities().size());
+				 * System.out.println(asd.get(1).getUrlEntities().get(0)
+				 * .getURLEntityJSONImpl().getExpandedURL());
+				 */
 			} catch (TwitterException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			return asd;
+			return statuses;
 		}
 
 		@Override
-		protected void onPostExecute(List<HomeTimelineObject> result) {
+		protected void onPostExecute(List<twitter4j.Status> result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 

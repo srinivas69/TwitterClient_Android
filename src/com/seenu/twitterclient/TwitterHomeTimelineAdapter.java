@@ -13,11 +13,19 @@ import android.widget.TextView;
 public class TwitterHomeTimelineAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<HomeTimelineObject> result;
+	private List<twitter4j.Status> result;
 
-	public TwitterHomeTimelineAdapter(Context context,
+	/*public TwitterHomeTimelineAdapter(Context context,
 			List<HomeTimelineObject> result) {
 		// TODO Auto-generated constructor stub
+		this.context = context;
+		this.result = result;
+	}*/
+
+	public TwitterHomeTimelineAdapter(Context context,
+			List<twitter4j.Status> result) {
+		// TODO Auto-generated constructor stub
+		
 		this.context = context;
 		this.result = result;
 	}

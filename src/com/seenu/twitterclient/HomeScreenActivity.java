@@ -1,7 +1,5 @@
 package com.seenu.twitterclient;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import twitter4j.Paging;
@@ -18,14 +16,13 @@ import android.util.Log;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class HomeScreenActivity extends ActionBarActivity {
 
-	Activity activity;
-	ListView lv;
-	Twitter twitter;
-	SharedPreferences pref;
+	private Activity activity;
+	private ListView lv;
+	private Twitter twitter;
+	private SharedPreferences pref;
 
 	private String CONSUMER_KEY;
 	private String CONSUMER_SECRET;
@@ -88,28 +85,13 @@ public class HomeScreenActivity extends ActionBarActivity {
 
 			List<twitter4j.Status> statuses = null;
 			try {
-				Gson gson = new Gson();
-				statuses = twitter.getHomeTimeline(new Paging(40));
+				statuses = twitter.getHomeTimeline();
 
 				System.out.println(statuses.size());
 				// Log.e("Statuses_Size", statuses.size());
 				Log.i("HOME_TIMELINE",
 						statuses.get(0).getURLEntities()[0].getURL());
-				String statusStr = gson.toJson(statuses); 
-				// System.out.println(statusStr);
 
-				/*
-				 * Type listType = new
-				 * TypeToken<ArrayList<HomeTimelineObject>>() { }.getType();
-				 */
-				// In this test code i just shove the JSON here as string.
-				// asd = gson.fromJson(statusStr, listType);
-				// if(asd.get(0).getUrlEntities().size()!=0)
-				/*
-				 * System.out.println(asd.get(1).getUrlEntities().size());
-				 * System.out.println(asd.get(1).getUrlEntities().get(0)
-				 * .getURLEntityJSONImpl().getExpandedURL());
-				 */
 			} catch (TwitterException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

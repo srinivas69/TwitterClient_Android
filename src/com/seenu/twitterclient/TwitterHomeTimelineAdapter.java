@@ -2,6 +2,8 @@ package com.seenu.twitterclient;
 
 import java.util.List;
 
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +17,16 @@ public class TwitterHomeTimelineAdapter extends BaseAdapter {
 	private Context context;
 	private List<twitter4j.Status> result;
 
-	/*public TwitterHomeTimelineAdapter(Context context,
-			List<HomeTimelineObject> result) {
-		// TODO Auto-generated constructor stub
-		this.context = context;
-		this.result = result;
-	}*/
+	/*
+	 * public TwitterHomeTimelineAdapter(Context context,
+	 * List<HomeTimelineObject> result) { // TODO Auto-generated constructor
+	 * stub this.context = context; this.result = result; }
+	 */
 
 	public TwitterHomeTimelineAdapter(Context context,
 			List<twitter4j.Status> result) {
 		// TODO Auto-generated constructor stub
-		
+
 		this.context = context;
 		this.result = result;
 	}
@@ -68,7 +69,16 @@ public class TwitterHomeTimelineAdapter extends BaseAdapter {
 			view.setTag(holder);
 		} else
 			holder = (ViewHolder) view.getTag();
-		
+
+		String prof_pic_url = result.get(pos).getUser().getProfileImageURL();
+		holder.nameAdpTv.setText(result.get(pos).getUser().getName());
+		holder.usrNameAdpTv.setText("@"
+				+ result.get(pos).getUser().getScreenName());
+		holder.descAdpTv.setText(result.get(pos).getText());
+
+		UrlImageViewHelper.setUrlDrawable(holder.imageViewAdpIv,
+				prof_pic_url, R.drawable.ic_launcher);
+
 		return view;
 	}
 

@@ -1,8 +1,20 @@
 package com.seenu.twitterclient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import twitter4j.Paging;
+import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -30,6 +42,9 @@ public class HomeScreenActivity extends ActionBarActivity {
 	private String ACCESS_TOKEN_SECRET;
 	final static String TwitterTokenURL = "https://api.twitter.com/oauth2/token";
 
+	// Accesss Token
+	private AccessToken accessToken;
+
 	final static String TwitterStreamURL = "https://api.twitter.com/1.1/statuses/home_timeline.json";
 
 	private TwitterHomeTimelineAdapter adapter;
@@ -52,7 +67,7 @@ public class HomeScreenActivity extends ActionBarActivity {
 		TwitterFactory factory = new TwitterFactory();
 
 		// get access_token fetching the data from sharedprefernces
-		AccessToken accessToken = loadAccessToken();
+		accessToken = loadAccessToken();
 		twitter = factory.getInstance();
 		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
 		twitter.setOAuthAccessToken(accessToken);
@@ -85,12 +100,10 @@ public class HomeScreenActivity extends ActionBarActivity {
 
 			List<twitter4j.Status> statuses = null;
 			try {
-				statuses = twitter.getHomeTimeline();
+				Paging pag = new Paging(1, 50);
+				statuses = twitter.getHomeTimeline(pag);
 
 				System.out.println(statuses.size());
-				// Log.e("Statuses_Size", statuses.size());
-				Log.i("HOME_TIMELINE",
-						statuses.get(0).getURLEntities()[0].getURL());
 
 			} catch (TwitterException e) {
 				// TODO Auto-generated catch block
@@ -110,6 +123,28 @@ public class HomeScreenActivity extends ActionBarActivity {
 			lv.setAdapter(adapter);
 		}
 
+	}
+
+	public String convertStreamToString(InputStream is) {
+		// TODO Auto-generated method stub
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
 	}
 
 }
